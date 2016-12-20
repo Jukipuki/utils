@@ -9,7 +9,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Key {
-
-    int order() default 0;
-
 }

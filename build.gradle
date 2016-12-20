@@ -6,3 +6,16 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'idea'
+
+version = '0.1'
+
+task utilsJar(type: Jar) {
+    manifest {
+        attributes =
+                ['Implementation-Title'  : 'Gradle Jar File Example',
+                 'Implementation-Version': version]
+    }
+    destinationDir = projectDir
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

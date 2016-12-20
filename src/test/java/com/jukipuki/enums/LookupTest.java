@@ -1,20 +1,39 @@
 package com.jukipuki.enums;
 
-import com.jukipuki.enums.lookup.Indexed;
+import com.jukipuki.enums.lookup.Indexable;
 import com.jukipuki.enums.lookup.Key;
-import com.jukipuki.enums.lookup.Lookup;
+import com.jukipuki.enums.lookup.Name;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LookupTest {
 
-    public static void main(String[] args) {
-        TestEnum lookup = Lookup.lookup(TestEnum.class, 2);
-        String value = lookup.getValue();
-        TestMultiKeyEnum multiKeyEnum = Lookup.lookup(TestMultiKeyEnum.class, 2, "Dos");
-        multiKeyEnum.getValue();
+    public static void main2(String[] args) {
+        /*TestEnum testEnum = lookupEnum(TestEnum.class, 2);
+        TestEnum testEnumNull = lookupEnumNullable(TestEnum.class, 5);
+        TestEnum testEnumDefault = lookupEnumNullable(TestEnum.class, 5, THIRD);
+        System.out.println("Enum: " + testEnum.getName() + "[" + testEnum.getKey() + "]");
+        System.out.println("Null: " + testEnumNull);
+        System.out.println("Default: " + testEnumDefault.getName() + "[" + testEnumDefault.getKey() + "]");
+        System.out.println();
+        TestMultiKeyEnum testEnumMulti = lookupEnum(TestMultiKeyEnum.class, new Integer[]{2, 2});
+        TestMultiKeyEnum testEnumNullMulti = lookupEnumNullable(TestMultiKeyEnum.class, new Integer[]{5, 5});
+        TestMultiKeyEnum testEnumDefaultMulti = lookupEnumNullable(TestMultiKeyEnum.class, new Integer[]{5, 5}, FIRST);
+        System.out.println("Multi Enum: " + testEnumMulti.getName() + "[" + Arrays.toString(testEnumMulti.getKey()) + "]");
+        System.out.println("Multi Null: " + testEnumNullMulti);
+        System.out.println("Multi Default: " + testEnumDefaultMulti.getName() + "[" + Arrays.toString(testEnumDefaultMulti.getKey()) + "]");
+        System.out.println();
+        TestListKeyEnum testEnumList = lookupEnum(TestListKeyEnum.class, new ArrayList<Integer>() {{add(2);}});
+        TestListKeyEnum testEnumNullList = lookupEnumNullable(TestListKeyEnum.class, new ArrayList<Integer>() {{add(5);}});
+        TestListKeyEnum testEnumDefaultList = lookupEnumNullable(TestListKeyEnum.class, new ArrayList<Integer>() {{add(5);}}, SECOND);
+        System.out.println("Multi Enum: " + testEnumList.getName() + "[" + testEnumList.getKey() + "]");
+        System.out.println("Multi Null: " + testEnumNullList);
+        System.out.println("Multi Default: " + testEnumDefaultList.getName() + "[" + testEnumDefaultList.getKey() + "]");
+        System.out.println();*/
     }
 
-    @Indexed
-    enum TestEnum {
+    enum TestEnum implements Indexable<Integer> {
 
         FIRST(1, "First"),
         SECOND(2, "Second"),
@@ -22,6 +41,8 @@ public class LookupTest {
 
         @Key
         private final int key;
+
+        @Name
         private final String value;
 
         TestEnum(int key, String value) {
@@ -29,7 +50,7 @@ public class LookupTest {
             this.value = value;
         }
 
-        public int getKey() {
+        public int getIndexKey() {
             return key;
         }
 
@@ -38,32 +59,49 @@ public class LookupTest {
         }
     }
 
-    @Indexed
-    enum TestMultiKeyEnum {
+    enum TestMultiKeyEnum implements Indexable<Integer[]> {
 
-        FIRST(1, "Uno", "First"),
-        SECOND(2, "Dos", "Second"),
-        THIRD(3, "Tres", "Third");
+        FIRST(new Integer[]{1, 1}, "First"),
+        SECOND(new Integer[]{2, 2}, "Second"),
+        THIRD(new Integer[]{3, 3}, "Third");
 
-        @Key(order = 2)
-        private final int key1;
+        @Key
+        private final Integer[] key;
 
-        @Key(order = 1)
-        private final String key2;
+        @Name
         private final String value;
 
-        TestMultiKeyEnum(int key1, String key2, String value) {
-            this.key1 = key1;
-            this.key2 = key2;
+        TestMultiKeyEnum(Integer[] key, String value) {
+            this.key = key;
             this.value = value;
         }
 
-        public int getKey1() {
-            return key1;
+        public String getValue() {
+            return value;
         }
+    }
 
-        public String getKey2() {
-            return key2;
+    enum TestListKeyEnum implements Indexable<List<Integer>> {
+
+        FIRST(new ArrayList<Integer>() {{
+            add(1);
+        }}, "First"),
+        SECOND(new ArrayList<Integer>() {{
+            add(2);
+        }}, "Second"),
+        THIRD(new ArrayList<Integer>() {{
+            add(3);
+        }}, "Third");
+
+        @Key
+        private final List<Integer> key;
+
+        @Name
+        private final String value;
+
+        TestListKeyEnum(List<Integer> key, String value) {
+            this.key = key;
+            this.value = value;
         }
 
         public String getValue() {
