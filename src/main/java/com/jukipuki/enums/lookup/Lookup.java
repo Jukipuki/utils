@@ -18,7 +18,7 @@ public class Lookup {
         }
         List<Field> keyFields = getKeyFields(type);
         if (keyFields.size() != keys.length) {
-            throw new InvalidParameterException("Number of key values doesn't match number of keys");
+            throw new InvalidParameterException("Number of key values doesn't match number of keys in " + type.getSimpleName());
         }
         return asList(type.getEnumConstants())
                 .stream()
